@@ -105,9 +105,7 @@ $(function() {
         /** Before we run the test, we have to wait for the first feed to be loaded. hence the
         function done() is used. */
         beforeEach(function(done) {
-            loadFeed(0,function() {
-                done();
-            });
+            loadFeed(0, done);
         });
 
         /**
@@ -115,10 +113,9 @@ $(function() {
          * there is at least a single .entry element within the .feed container.
          *@function
          */
-        it('have at least one entry', function(done) {
+        it('have at least one entry', function() {
             /** Checks that the feed has at least one entry by making sure its length is larger than 0 */
             expect($('.feed').length).toBeGreaterThan(0);
-            done();
         });
     });
     
@@ -130,12 +127,14 @@ $(function() {
         /** A variable used to store the current content of the feed. */
         var lastContent;
 
+        /** The done function is used here since loading the first and second feeds is async */
         beforeEach(function(done) {
-            /** Before that test is run, the contents of the first feed are stored in lastContent. */
-            lastContent = $('.feed').html();
-            /** A new feed is loaded. The function done is used since it's an async function */
-            loadFeed(1,function() {
-                done();
+            /** Before the test is run, the first feed is loaded. */
+            loadFeed(0,function() {
+                /** The contents of the first feed are stored in lastContent */
+                lastContent = $('.feed').html();
+                /** The second feed is loaded. */
+                loadFeed(1, done);
             });
         });
 
@@ -144,12 +143,11 @@ $(function() {
          * content actually changes.
          *@function
          */
-        it('changes the content', function(done) {
+        it('changes the content', function() {
             /** Checks that the contents of the new feed are different than those of the old feed */
             expect($('.feed').html()).not.toEqual(lastContent);
             /** The default feed is loaded back */
             loadFeed(0);
-            done();
         });
     });
 }());
